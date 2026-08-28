@@ -7,8 +7,7 @@ Delegated Authority Evaluations
   [https://identity.foundation/delegated-authority-evaluations](https://identity.foundation/delegated-authority-evaluations)
 
 Editors:
-~ [Dmitri Zagidulin](https://www.linkedin.com/in/dzagidulin/) - Independent
-
+~ [Dmitri Zagidulin](https://www.linkedin.com/in/dzagidulin/) - ([Interop Alliance](http://interopalliance.org/))
 Contributors:
 
 ~ [Deb Bucci](https://www.linkedin.com/in/debbie-bucci/) ([Deb B Labs](https://docs.google.com/document/d/e/2PACX-1vQoFsZd-vSLZ0nr278sQ4t2UBK3-zrVFi1yt-uhM4u47_gOIL2LP4dd6SGEXkMBlL5dWwv08Nx9IIr4/pub))

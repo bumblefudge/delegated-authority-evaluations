@@ -16,7 +16,7 @@ Contributors:
 ~ [Agne Caunt](https://www.linkedin.com/in/agne-c-a4495879) - [Dock Labs](https://www.dock.io/)
 ~ [Makki Elfatih](https://www.linkedin.com/in/makki-elfatih-b835752a9/) - [HKDolts](https://hkdolts.wixsite.com/mysite)
 ~ [Sachio Iwamoto](https://www.linkedin.com/in/sachio-iwamoto/) - [Kyndryl](https://www.kyndryl.com/us/en)
-~ [Alan Karp](https://www.linkedin.com/in/alanhkarp/) - Independent
+~ [Alan Karp](https://www.linkedin.com/in/alanhkarp/) - [Independent](https://www.alanhkarp.com/)
 
 Participate:
 ~ [GitHub repo](https://github.com/decentralized-identity/delegated-authority-evaluations)

@@ -18,7 +18,7 @@ Contributors:
 ~ [Sachio Iwamoto](https://www.linkedin.com/in/sachio-iwamoto/) - ([Kyndryl](https://www.kyndryl.com/us/en))
 ~ [Alan Karp](https://www.linkedin.com/in/alanhkarp/) - ([Independent](https://www.alanhkarp.com/))
 
-Related Specifications:
+**Related Specifications:**
 
 - [Problem Space Report](https://identity.foundation/delegated-authority-report/)
 - [Specification Evaluations](https://identity.foundation/delegated-authority-evaluations)
@@ -27,6 +27,7 @@ Related Specifications:
 - [Agentic-Delegation User-Story Walk-through](https://www.youtube.com/watch?v=u-uWl_s0PPM)
 
 Participate:
+
 ~ [GitHub repo](https://github.com/decentralized-identity/delegated-authority-evaluations)
 ~ [File a bug](https://github.com/decentralized-identity/delegated-authority-evaluations/issues)
 ~ [Commit history](https://github.com/decentralized-identity/delegated-authority-evaluations/commits/master)

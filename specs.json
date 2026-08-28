@@ -1,39 +1,21 @@
 {
   "specs": [
     {
-      "title": "Spec-Up Example",
+      "title": "Delegated Authority Evaluations",
       "spec_directory": "./single-file-test",
       "output_path": "./",
       "logo": "logo.svg",
-      "logo_link": "https://github.com/decentralized-identity/spec-up",
+      "logo_link": "https://github.com/decentralized-identity/delegated-authority-evaluations",
       "source": {
         "host": "github",
         "account": "decentralized-identity",
-        "repo": "spec-up"
+        "repo": "delegated-authority-evaluations"
       },
       "external_specs": [
         {
-          "PE": "https://identity.foundation/presentation-exchange"
-        }
+         }
       ],
       "katex": true
-    },
-    {
-      "title": "Spec-Up Multi-File Example",
-      "spec_directory": "./multi-file-test",
-      "markdown_paths": [
-        "header.md",
-        "abstract.md",
-        "getting-started.md",
-        "features.md"
-      ],
-      "logo": "../logo.svg",
-      "logo_link": "https://github.com/decentralized-identity/spec-up",
-      "source": {
-        "host": "github",
-        "account": "decentralized-identity",
-        "repo": "spec-up"
-      }
     }
   ]
 }

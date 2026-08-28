@@ -346,43 +346,43 @@ A note on method: This chapter was drafted with AI research collaborators under 
 
 ### Scorecard
 
-#### 1 Accountable (agent vs. principal/operator)
+#### Accountable (agent vs. principal/operator)
 
 Verdict: Yes
 
 AAuth distinguishes authenticated people, agents, Person Servers, Agent Providers, and resources. Delegation history records acting parties through the act claim.
 
-#### 2 Resistant to confused deputy (no ambient authority)
+#### Resistant to confused deputy (no ambient authority)
 
 Verdict: Partial
 
 The resource-managed, PS-asserted, and federated modes bind an authorization to a designated resource and scope through the resource token, combining designation with authorization. The **optional** account parameter added in draft-10 narrows that binding further, naming which account at the resource the authorization covers and propagating through the resource token into the auth token. Identity-based access does not do this: the resource authorizes on the agent's identity alone and applies its own access control, which is ambient authority.
 
-#### 3 Represent authorization policies
+#### Represent authorization policies
 
 Verdict: Partial
 
 Authorization context and Mission References are represented, but expressive delegation policy—for example, undelegatable authority, advisory policy, or attenuation constraints—is intentionally out of scope of the protocol, or inside the logic and authority of the Person Server.
 
-#### 4 Chainable
+#### Chainable
 
 Verdict: Yes
 
 Delegation chains are represented through the act claim and the Mission Log. Chains are server-mediated rather than portable capability artifacts. Sub-agent nesting is single-level; deeper workflows use chained top-level agents, each an independent principal holding its own grant.
 
-#### 5 Cross-organizational / locally verifiable
+#### Cross-organizational / locally verifiable
 
 Verdict: Yes
 
 Designed for authenticated interactions across organizational boundaries while preserving local trust relationships.
 
-#### 6 Attenuated
+#### Attenuated
 
 Verdict: Partial — differs by mode
 
 Sub-agent authorization supports attenuation: every request passes through the parent, which can refuse, attenuate, or rate-limit. Call chaining does not — downstream authorization is intentionally not required to be a subset of upstream scope. Cryptographically enforced attenuation is not intrinsic to the protocol in either case.
 
-#### 7 Self-revocable
+#### Self-revocable
 
 Verdict: Partial
 
@@ -418,7 +418,7 @@ Unlike certificate capability-based systems, accountability derives from authent
 
 The specification also permits a resource to authorize an agent based solely on its identity, without interaction or mission context; working-group discussion has flagged that identity-only authorization reintroduces confused-deputy exposure, since the execution context rather than the requester's identity is what validates an action.
 
-#### 2 Resistant to confused deputy (no ambient authority)
+#### Resistant to confused deputy (no ambient authority)
 
 The confused deputy problem arises where a party exercises its own permissions on a resource designated by someone else. The defence is to combine designation with authorization, so that what may be done is bound to what it may be done to.
 
@@ -426,7 +426,7 @@ In the resource-managed, PS-asserted, and federated modes AAuth does this. The a
 
 Identity-based access is the exception, and a deliberate one. The agent signs requests with its agent token, and the resource applies its own access control based on who the agent is. There is no authorization flow and no designation carried with the request. The specification presents this as a replacement for API keys, which it is; but authority derived from identity alone is ambient, and an agent acting on a request supplied by another party has no way to signal that the request is not its own.
 
-#### 3 Ability to Represent Authorization Policies
+#### Ability to Represent Authorization Policies
 
 AAuth represents authorization context through missions, authenticated requests, and protocol-defined execution relationships. Mission References bind requests to an existing mission while allowing authorization policy to remain under the control of the Person Server.
 
@@ -434,7 +434,7 @@ The protocol intentionally does not standardize a rich delegation policy languag
 
 This separation allows AAuth to remain focused on authenticated execution while supporting a wide variety of higher-level authorization models.
 
-#### 4 Chainable
+#### Chainable
 
 AAuth provides explicit delegation mechanics through the act claim and the Mission Log. These mechanisms record delegation history across direct delegation, chained delegation, and sub-agent authorization.
 
@@ -444,7 +444,7 @@ Accordingly, AAuth supports delegation chains, but those chains are server-media
 
 Sub-agent nesting is limited to a single level: a sub-agent must not have sub-agents of its own, and the specification enforces this from both directions. Deeper workflows are carried instead by call chaining, where each hop is an independent top-level agent holding its own grant rather than a recursive sub-agent — which is also why upstream-subset rules do not apply to it. What the specification defers to a companion document is mission state administration beyond completion: revocation state transitions, delegation-tree queries, and administrative interfaces. Delegation-chain lifecycle is not deferred; sub-agent revocation propagates through the parent's grant.
 
-#### 5 Cross-Organizational / Locally Verifiable
+#### Cross-Organizational / Locally Verifiable
 
 Supporting authenticated interactions across organizational boundaries is one of AAuth's principal architectural objectives.
 
@@ -454,7 +454,7 @@ Trust remains anchored in authenticated protocol interactions and configured tru
 
 From a capability-based perspective, the need for Access Server federation may indicate that authority remains server-mediated rather than fully represented by the delegation credential itself. If the delegation credential carried sufficient authority for cross-domain verification, no ongoing relationship between authorization servers would be required.
 
-#### 6 Attenuated
+#### Attenuated
 
 Attenuation in AAuth differs by delegation mode. Sub-agent authorization supports it directly: every sub-agent request passes through the parent, which can refuse, attenuate, or rate-limit. Call chaining, by design, does not support delegation.  Downstream authorization is intentionally not required to be a subset of upstream scope, and downstream scope is constrained by the downstream resource's own policy together with Person Server evaluation against mission context.
 
@@ -464,7 +464,7 @@ The protocol therefore leaves attenuation semantics outside its definition, supp
 
 This is deliberate design rather than omission. AAuth does not adopt the RFC 8693 token-exchange model for attenuation (it borrows only that RFC's act claim structure for representing delegation chains), and Appendix B.3.7 states the rationale directly: downstream scope is intentionally not required to be a subset of upstream scope, because "the PS evaluates each hop against the mission context, providing governance-based constraints... more flexible than algebraic attenuation rules." The one place attenuation exists within an agent's own purview is sub-agent authorization, where the parent "can refuse, attenuate, or rate-limit" the sub-agent's authority.
 
-#### 7 Self-Revocable
+#### Self-Revocable
 
 AAuth includes mechanisms for token revocation and lifecycle management.
 
@@ -514,7 +514,7 @@ Reference points used in this evaluation:
 
 ### Detailed Evaluation
 
-#### 1 Accountable: agent vs. principal/operator
+#### Accountable: agent vs. principal/operator
 
 Both specs satisfy the accountability half of this criterion structurally and the differentiation half only implicitly.
 
@@ -522,11 +522,11 @@ The actor is named directly: the controller field of a zCap, or the issuer/audie
 
 What neither spec provides is a semantic distinction between "this DID is an autonomous agent" and "this DID is the legal entity that stands behind it." A principal is an opaque DID; the root controller is the operator only by convention. Both specs push the binding of key identifiers to real-world legal entities explicitly out of scope, and for similar reasons: it is not always desirable or possible, and forcing it would be a privacy violation in many settings. Where the mapping is needed, both point at the same companion pattern: use an identity layer (Verifiable Credentials, issuer registries, DID methods) for the human-judgement call at the entry point, and use the capability chain for the flow of authority thereafter. An auditor can always identify which key delegated which authority to which other key; note that this auditability can be fulfilled with local pairwise identifiers only, without global identities.
 
-#### 2 Resistant to confused deputy
+#### Resistant to confused deputy
 
 Resistant by construction, and this shared property is the reason the family exists. In both specs, designation and authorization are inseparable parts of the signed artifact: a zCap binds invocationTarget to allowedAction, and a UCAN capability is defined as subject times command times policy. The verifier evaluates the presented chain, not the invoker's own ambient standing, so there are no deputy permissions to confuse. A delegatee asked to act on a resource designated by someone else either holds a capability whose designation covers that resource, or the invocation fails.
 
-#### 3 Ability to represent authorization policies
+#### Ability to represent authorization policies
 
 The least emphasized area for both specs as currently deployed, and the clearest shared gap.
 
@@ -544,7 +544,7 @@ Against the checklist's specific policy examples, the two specs fail identically
 
 So both data models can carry policy through an extensible slot, but neither ships a shared vocabulary for the policies the checklist cares about, and current deployments do not use the slots. This is arguably the highest-value area of future work for the family, if it is to serve agentic delegation.
 
-#### 4 Chainable
+#### Chainable
 
 The headline strength of both specs and the reason the model exists.
 
@@ -552,7 +552,7 @@ In zCaps, delegation is expressed by parentCapability (pointing up at the parent
 
 Both directly satisfy the two senses the checklist asks for: principal/operator to agent (root to first delegation), and agent to further subsystems or other agents (the zCap spec's valet example, car to Alyssa to Ben to Lem, is precisely a multi-hop agent-to-agent chain). In both, each link is created offline, simply by signing a new child artifact with a key the parent authorized; no involvement of the resource server is required to delegate.
 
-#### 5 Cross-organizational / locally verifiable
+#### Cross-organizational / locally verifiable
 
 Strong in both, and again by design. Verification is purely cryptographic and local to the verifier: it traverses the chain from the root down, checking each delegation proof against the key authorized by the step above, and checking that each step only narrows authority. Principals are DID-based key identifiers, so two organizations can delegate to each other purely by exchanging signed capabilities, with no accounts on each other's IAM systems.
 
@@ -560,7 +560,7 @@ The specs differ in how the chain reaches the verifier. zCaps fix this normative
 
 Verification involves several steps, some of which (like DID resolution) may need to access the network, and some (like checking a local revocation registry) can be done offline. To put it another way, chain structure verification can be performed offline; key revocation checks and other verification steps may need network access.
 
-#### 6 Attenuated
+#### Attenuated
 
 Both specs enforce monotonic attenuation, checked by the verifier at every link: a delegator can hand out no more than they hold. The axes differ.
 
@@ -570,7 +570,7 @@ UCAN attenuates abstractly: each direct delegation must restate or diminish its 
 
 The limitations are mirror images. zCap attenuation of the resource is restricted to URL-suffix shaping, fine for hierarchical REST resources but awkward for non-hierarchical scoping, and a single zCap carries exactly one invocationTarget (multiple target/action combinations are listed as future work). UCAN's abstraction is more flexible but less prescriptive: resource scoping is left to how cmd and args are interpreted, with no normative URL rules in the core spec.
 
-#### 7 Self-revocable
+#### Self-revocable
 
 Both specs meet the checklist requirement that the holder, or someone in the delegation chain, be able to revoke (modulo network partitions), and this is the criterion where their mechanics diverge most sharply.
 
@@ -659,7 +659,6 @@ The differences between the two are real but sit a level down, in encoding and e
 
 [Cedar](https://www.cedarpolicy.com/en) is an open-source authorization policy [language](https://docs.jans.io/stable/cedar-intro/?h=cedar) and evaluation engine created by IAM specialists at Amazon with formal methods training (used in AWS Verified Permissions; the language syntax itself is now a CNCF [candidate project](https://www.cncf.io/projects/cedar/)). A Cedar policy answers "**may** this principal **perform** this action **on** this resource **under** these conditions (context)" using `permit` and `forbid` statements validated against a typed schema. Evaluation is deterministic, default-deny, and `forbid` always overrides `permit`.  Over time, the core Cedar [language](https://docs.jans.io/stable/cedar-intro/?h=cedar) and its canonical reference implementation in Rust have been generalized from Amazon’s production implementation in Keycloak/AWS contexts to be hardened and governed at CNCF within the Linux Foundation (as mentioned above); a cloud-agnostic IAM framework generalizing the Keycloak/AWS tooling is governed in a dedicated Linux Foundation Project called [Janssen](https://docs.jans.io/stable/getting-started/), which also governs and develops the younger “Cedarling,” a lightweight version of Cedar’s enforcement engine that can be run “practically anywhere” as a WASM component inside of not just servers but even clients and agents/harnesses.
 
-//TODO: add section explaining that machine-readable policy evaluation CAN be construed to include identity-blind/unauthenticated capabilities, OR AT LEAST to help such tooling be intelligible to agents and unfamiliar callers in a cross-org use-case.
 
 **Cedar has no native, enforced delegation primitive.** It is a policy expression language plus a Policy Decision Point (PDP), with no native concept of a credential, a holder, a signature, or a delegation chain. It is *identity-based* in the classic sense: the verifier decides access by evaluating who the principal is (and their attributes and group memberships, as made known to the verifier by tokens from server-side tooling like Janssen) against policies the verifier holds, in contrast to possession-based models like zCaps, where presenting a valid signed capability constitutes the “just-in-time” proof of authority. This identity-vs-possession distinction drives nearly every row of the scorecard.
 
@@ -691,17 +690,17 @@ Where Cedar (the language) and runtime-evaluation deployments like Cedarling dif
 
 ### Cedar Evaluation
 
-#### 1 Accountable, agent vs. principal/operator
+#### Accountable, agent vs. principal/operator
 
 Differentiation is a schema design choice, made trivially. Cedar entities are typed and hierarchical, so the agent/operator relationship can be modeled directly, for example `entity Agent in [User] { model: String, runtime: String, trust_level: String }`, which is exactly the pattern the Clawdrey case study uses: the agent is a typed principal nested under its human operator, and policies can condition on either or both. Cedarling operationalizes the same split out of the box: it constructs a **User** principal from the OIDC id\_token and a separate **Workload** principal from the OAuth access token (the software acting on behalf of the person, or autonomously), and its default decision logic can require that *both* the person and the workload be authorized for the request to proceed. That is precisely the agent-vs-operator distinction the matrix asks for, expressed natively in the data model rather than by convention.
 
 What Cedar does not provide is cryptographic accountability for the *delegation* itself. There is no signed delegation edge: the "fact" that operator O stands behind agent A is an entity attribute or a token claim that the verifier chose to trust. Attribution quality is therefore exactly the attribution quality of the surrounding identity layer (the JWT issuer, in Cedarling's case). An auditor can read the decision logs (Cedarling logs every decision with diagnostics) and reconstruct *which policy permitted which principal*, but cannot derive a non-repudiable "this delegator authorized this delegatee" proof from the Cedar artifacts alone. The accountable party for any grant is, structurally, the policy store administrator.
 
-#### 2 Resistant to confused deputy
+#### Resistant to confused deputy
 
 Evaluated as-is: no, and the exposure follows directly from the identity-based model. The verifier decides access by evaluating who the principal is against verifier-held policies, so a deputy service acting on a caller-designated resource exercises its own standing permissions; nothing in the model binds the caller's designation to the authority being used. Policies conditioned on request context can mitigate specific deputy scenarios, but that is per-policy mitigation, not the structural designation-plus-authorization coupling that capability systems provide. In a delegation stack, immunity would have to come from the carrier layer, with Cedar evaluating the rules at each hop.
 
-#### 3 Ability to represent authorization policies
+#### Ability to represent authorization policies
 
 Policies are first-class, schema-validated, and arbitrarily conditional on principal, action, resource and request context: attribute comparisons, group membership (`in`), set operations, string and IP functions, and explicit `forbid` statements that override any permit. Policies can be embedded with the verifier or distributed to it (Cedarling fetches signed policy stores over HTTPS or from a Lock Server), satisfying the embed-or-link condition.
 
@@ -715,7 +714,7 @@ Against the matrix's specific examples:
 
 One genuinely distinctive property deserves mention here: Cedar is **analyzable**. The language was deliberately kept non-Turing-complete (no loops, no recursion, guaranteed termination) and its evaluator is formally verified, so policy sets can be subjected to automated reasoning: does policy set A permit anything B does not, are these two sets equivalent, is this forbid ever reachable. For a delegation context, that means delegation rules can be *audited and proven* offline, which no other technology in this survey offers.
 
-#### 4 Chainable
+#### Chainable
 
 Evaluated as-is: no. Cedar has no delegation primitive. There is no parent pointer, no chain, no signed artifact that one party hands to another. Two in-language mechanisms get part of the way and are worth naming precisely:
 
@@ -725,7 +724,7 @@ Evaluated as-is: no. Cedar has no delegation primitive. There is no parent point
 
 So in a delegation stack, the chain must live in the carrier layer (signed tokens or credentials linked hop to hop), and Cedar's role is to evaluate the rules *at* each hop: may this delegator delegate this, may this delegatee exercise it. Cedar is the rulebook for the chain, not the chain.
 
-#### 5 Cross-organizational / locally verifiable
+#### Cross-organizational / locally verifiable
 
 Half of this requirement is Cedarling's headline feature; the other half is structurally missing.
 
@@ -733,7 +732,7 @@ Half of this requirement is Cedarling's headline feature; the other half is stru
 
 **Cross-organizational: partial.** Cedarling's TBAC model is genuinely multi-party at the *evidence* level: `authorize_multi_issuer` accepts JWTs from several different trusted issuers in one request and maps their claims to Cedar entities, so organization A's verifier can consume identity evidence issued by organization B without B having an account in A's IAM. But the *policy* level is unilateral: the policy store (schema, policies, trusted issuer list) belongs to the verifier alone. There is no standard for one organization to hand another a policy fragment with agreed semantics, no shared schema federation, and the trusted issuer list is pre-configuration, not dynamic trust establishment. Two organizations can interoperate, but only after bilateral setup; the matrix's "express authorization policies without accounts on each other's IAM systems" is met for authentication evidence and unmet for policy exchange.
 
-#### 6 Attenuated
+#### Attenuated
 
 Cedar has one structural property that maps beautifully onto attenuation, and one missing property that prevents a full Yes.
 
@@ -743,7 +742,7 @@ What is missing is **enforced subset semantics between grants**. If a delegation
 
 Expressiveness of attenuation, once enforced, is far richer than URL-suffix narrowing: any condition the language can state (attribute ranges, context conditions, time windows, resource groups) can be the attenuation axis.
 
-#### 7 Self-revocable
+#### Self-revocable
 
 Revocation in Cedar terms is straightforward and immediate: delete the permit (or the template instantiation, or the delegation entity) or add a forbid, and the very next evaluation reflects it. Forbid-overrides-permit makes "revoke" particularly clean: a targeted forbid kills a grant without having to find and remove every permit that contributed to it. Granularity is excellent: one delegatee, one action, one resource, one condition.
 

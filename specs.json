@@ -2,7 +2,7 @@
   "specs": [
     {
       "title": "Delegated Authority Evaluations",
-      "spec_directory": "./single-file-test",
+      "spec_directory": "./single-file-spec",
       "output_path": "./",
       "logo": "logo.svg",
       "logo_link": "https://github.com/decentralized-identity/delegated-authority-evaluations",

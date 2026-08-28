@@ -11,12 +11,12 @@ Editors:
 
 Contributors:
 
-~ [Deb Bucci](https://www.linkedin.com/in/debbie-bucci/) - [Deb B Labs](https://docs.google.com/document/d/e/2PACX-1vQoFsZd-vSLZ0nr278sQ4t2UBK3-zrVFi1yt-uhM4u47_gOIL2LP4dd6SGEXkMBlL5dWwv08Nx9IIr4/pub)
-~ [Juan Caballero](https://www.linkedin.com/in/juan-caballero/) - [learningProof UG](https://learningproof.xyz/)
-~ [Agne Caunt](https://www.linkedin.com/in/agne-c-a4495879) - [Dock Labs](https://www.dock.io/)
-~ [Makki Elfatih](https://www.linkedin.com/in/makki-elfatih-b835752a9/) - [HKDolts](https://hkdolts.wixsite.com/mysite)
-~ [Sachio Iwamoto](https://www.linkedin.com/in/sachio-iwamoto/) - [Kyndryl](https://www.kyndryl.com/us/en)
-~ [Alan Karp](https://www.linkedin.com/in/alanhkarp/) - [Independent](https://www.alanhkarp.com/)
+~ [Deb Bucci](https://www.linkedin.com/in/debbie-bucci/) ([Deb B Labs](https://docs.google.com/document/d/e/2PACX-1vQoFsZd-vSLZ0nr278sQ4t2UBK3-zrVFi1yt-uhM4u47_gOIL2LP4dd6SGEXkMBlL5dWwv08Nx9IIr4/pub))
+~ [Juan Caballero](https://www.linkedin.com/in/juan-caballero/)  ([learningProof UG](https://learningproof.xyz/))
+~ [Agne Caunt](https://www.linkedin.com/in/agne-c-a4495879) - ([Dock Labs](https://www.dock.io/))
+~ [Makki Elfatih](https://www.linkedin.com/in/makki-elfatih-b835752a9/) - ([HKDolts](https://hkdolts.wixsite.com/mysite))
+~ [Sachio Iwamoto](https://www.linkedin.com/in/sachio-iwamoto/) - ([Kyndryl](https://www.kyndryl.com/us/en))
+~ [Alan Karp](https://www.linkedin.com/in/alanhkarp/) - ([Independent](https://www.alanhkarp.com/))
 
 Related Specifications:
 

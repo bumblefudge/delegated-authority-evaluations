@@ -16,13 +16,13 @@ Contributors:
 ~ [Agne Caunt](https://www.linkedin.com/in/agne-c-a4495879) - ([Dock Labs](https://www.dock.io/))
 ~ [Makki Elfatih](https://www.linkedin.com/in/makki-elfatih-b835752a9/) - ([HKDolts](https://hkdolts.wixsite.com/mysite))
 ~ [Sachio Iwamoto](https://www.linkedin.com/in/sachio-iwamoto/) - ([Kyndryl](https://www.kyndryl.com/us/en))
-~ [Alan Karp](https://www.linkedin.com/in/alanhkarp/) - ([Independent](https://www.alanhkarp.com/))
+~ [Alan Karp](https://www.linkedin.com/in/alanhkarp/) - [SitePassword](https://github.com/alanhkarp/SitePassword/)
 
 **Related Specifications:**
 
 - [Problem Space Report](https://identity.foundation/delegated-authority-report/)
-- [Specification Evaluations](https://identity.foundation/delegated-authority-evaluations)
-- Threat Model (You are here)
+- Specification Evaluations (You are here)
+- [Threat Model](https://identity.foundation/delegated-authority-threat-model/)
 - [Governance Considerations](https://identity.foundation/governance-of-delegated-authority-report/)
 - [Agentic-Delegation User-Story Walk-through](https://www.youtube.com/watch?v=u-uWl_s0PPM)
 

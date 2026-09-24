@@ -491,6 +491,190 @@ This architectural choice intentionally separates authenticated execution from h
 
 Accordingly, AAuth is best understood as a server-mediated delegation and execution framework. It provides authenticated execution, delegation continuity, and mission coordination while allowing complementary policy and governance architectures to determine whether delegated authority remains valid as mission context, organizational policy, and authority state evolve.
 
+## AuthZed/Zanzibar Evaluation
+
+### Overview
+
+AuthZed is an open-source framework for governing data planes via a "ReBAC" (Relationship-based Access Control) data store called SpiceDB, best understood as a directed graph fit for complex graph-aware queries. SpiceDB is, in turn, a kind of community-fork or open-source alternative to Google's internal Zanzibar system, powering the authorization of Google's many diverse integrated systems (GMail, Gdrive, Google Cloud IAM, and Youtube, for example), based on the original Zanzibar whitepaper.
+
+While SpiceDB can still categorized as an "access control list", its design goals were to be a superset of many different simpler access lists, and capable of expressing complex relationships and queries (like inheritance, tombstoning, etc) _across_ those multiple data models. This "meta" relationship is crucial to the enterprise sales pitch, in that by being a flexible layer on top of heterogenous authorization and identity systems, it can abstract and reason over multiple of them in an enterprise context where data governance comes (inflexibly) along with the data of customers and partners. It centralizes into one permissioning engine a complex layering of access control lists, and allows for graph queries to performantly be executed over that centralized mega-datastore.
+
+It is particularly noteworthy as an alternative to conventional ACLs for use in agentic systems because of [OpenAI publicly using and championing it](https://authzed.com/customers/openai), and for AuthZed's [RAG use case](https://authzed.com/use-cases/ai-retrieval-augmented-generation), whereby data governance inherited from training sets can dynamically be applied in training pipelines and (ideally) even preserved in their outputs.
+
+#### References
+
+* Gates, Carrie, [Access Control Requirements for Web 2.0 Security and Privacy](https://www.researchgate.net/profile/Carrie-Gates-2/publication/240787391_Access_Control_Requirements_for_Web_20_Security_and_Privacy/links/540e6f670cf2d8daaacd4adf/Access-Control-Requirements-for-Web-20-Security-and-Privacy.pdf), 2006.
+* [Explainer for SpiceDB relationship syntax](https://authzed.com/docs/spicedb/concepts/relationships#relationship-syntax)
+* [Explainer for SpiceDB relationship-caveat syntax](https://authzed.com/docs/spicedb/concepts/caveats#writing-relationships-with-caveats-and-context)
+
+### Scorecard
+
+#### Accountable (agent vs. principal/operator)
+
+<!--
+Verdict: Yes
+
+AAuth distinguishes authenticated people, agents, Person Servers, Agent Providers, and resources. Delegation history records acting parties through the act claim.
+-->
+
+#### Resistant to confused deputy (no ambient authority)
+
+<!--
+Verdict: Partial
+
+The resource-managed, PS-asserted, and federated modes bind an authorization to a designated resource and scope through the resource token, combining designation with authorization. The **optional** account parameter added in draft-10 narrows that binding further, naming which account at the resource the authorization covers and propagating through the resource token into the auth token. Identity-based access does not do this: the resource authorizes on the agent's identity alone and applies its own access control, which is ambient authority.
+-->
+
+#### Represent authorization policies
+
+<!--
+Verdict: Partial
+
+Authorization context and Mission References are represented, but expressive delegation policy—for example, undelegatable authority, advisory policy, or attenuation constraints—is intentionally out of scope of the protocol, or inside the logic and authority of the Person Server.
+-->
+
+#### Chainable
+
+<!--
+Verdict: Yes
+
+Delegation chains are represented through the act claim and the Mission Log. Chains are server-mediated rather than portable capability artifacts. Sub-agent nesting is single-level; deeper workflows use chained top-level agents, each an independent principal holding its own grant.
+-->
+
+#### Cross-organizational / locally verifiable
+
+<!--
+Verdict: Yes
+
+Designed for authenticated interactions across organizational boundaries while preserving local trust relationships.
+-->
+
+#### Attenuated
+
+<!--
+Verdict: Partial — differs by mode
+
+Sub-agent authorization supports attenuation: every request passes through the parent, which can refuse, attenuate, or rate-limit. Call chaining does not — downstream authorization is intentionally not required to be a subset of upstream scope. Cryptographically enforced attenuation is not intrinsic to the protocol in either case.
+-->
+
+#### Self-revocable
+
+<!--
+Verdict: Partial
+
+Token revocation, mission revocation, and propagation through a parent's grant are all specified. Revocation is exercised by the servers holding authority rather than by a holder acting on a credential in hand, and mission state administration beyond completion is deferred to a companion specification.
+-->
+
+#### Authentication / Proof of Possession
+
+<!--
+Verdict: Yes
+
+Core capability of the protocol. `draft-10` requires a fully-specified alg identifier, recommends Ed25519, and prohibits none, symmetric algorithms, and the polymorphic EdDSA identifier that RFC 9864 deprecated.
+-->
+
+#### Privacy of Delegation Chain
+
+<!--
+Verdict: Partial
+
+Delegation history is maintained by the Person Server rather than being universally disclosed through portable credentials. The protocol records delegation continuity while allowing deployment architectures to determine how much of that history is exposed during execution.
+-->
+
+#### Offline Capable
+
+<!--
+Verdict: Partial
+
+Implementations MUST cache JWKS and SHOULD continue verifying against cached keys when a fetch fails, bounded by a cache lifetime of at most 24 hours, so token verification survives temporary loss of contact with an issuer. Obtaining authority remains online-only: AAuth's server-mediated model provides no offline delegation, and initial key discovery requires reachable metadata.
+-->
+
+### Detailed Evaluation
+
+#### Accountable (agent vs. principal/operator)
+
+<!--AAuth explicitly distinguishes among authenticated people, AI agents, Person Servers, Agent Providers, and protected resources. Rather than treating software agents merely as extensions of user sessions, the protocol gives each participant its own authenticated identity and architectural role.
+
+Delegated actions are represented through the act claim, allowing delegation history to be maintained across direct delegation, sub-agent delegation, and chained execution. Mission References further associate requests with the governing mission maintained by the Person Server.
+
+Unlike certificate capability-based systems, accountability derives from authenticated protocol exchanges combined with server-maintained mission history rather than from cryptographically self-contained delegation credentials.
+
+The specification also permits a resource to authorize an agent based solely on its identity, without interaction or mission context; working-group discussion has flagged that identity-only authorization reintroduces confused-deputy exposure, since the execution context rather than the requester's identity is what validates an action.
+-->
+
+#### Resistant to confused deputy (no ambient authority)
+
+<!--The confused deputy problem arises where a party exercises its own permissions on a resource designated by someone else. The defence is to combine designation with authorization, so that what may be done is bound to what it may be done to.
+
+In the resource-managed, PS-asserted, and federated modes AAuth does this. The agent obtains a resource token naming the resource and scope; the auth token issued against it carries that binding, and the resource enforces it. The OPTIONAL account parameter, added in \-10, narrows the binding further: it names which account at the resource the authorization is for, drawn from the resource's own namespace, and is echoed through the resource token into the auth token, so an auth token for one account grants nothing at another.
+
+Identity-based access is the exception, and a deliberate one. The agent signs requests with its agent token, and the resource applies its own access control based on who the agent is. There is no authorization flow and no designation carried with the request. The specification presents this as a replacement for API keys, which it is; but authority derived from identity alone is ambient, and an agent acting on a request supplied by another party has no way to signal that the request is not its own.
+-->
+
+#### Ability to Represent Authorization Policies
+
+<!--
+AAuth represents authorization context through missions, authenticated requests, and protocol-defined execution relationships. Mission References bind requests to an existing mission while allowing authorization policy to remain under the control of the Person Server.
+
+The protocol intentionally does not standardize a rich delegation policy language. Concepts such as undelegatable permissions, advisory delegation preferences, attenuation constraints, or policy composition remain responsibilities of external policy engines or governance frameworks.
+
+This separation allows AAuth to remain focused on authenticated execution while supporting a wide variety of higher-level authorization models.
+-->
+
+#### Chainable
+
+<!--AAuth provides explicit delegation mechanics through the act claim and the Mission Log. These mechanisms record delegation history across direct delegation, chained delegation, and sub-agent authorization.
+
+Unlike certificate capability-based systems, delegation history is maintained by the Person Server rather than embedded entirely within a portable delegation credential. Verification therefore depends upon authenticated interaction with the server maintaining mission state rather than validating an independently portable capability chain.
+
+Accordingly, AAuth supports delegation chains, but those chains are server-mediated rather than self-contained cryptographic artifacts.
+
+Sub-agent nesting is limited to a single level: a sub-agent must not have sub-agents of its own, and the specification enforces this from both directions. Deeper workflows are carried instead by call chaining, where each hop is an independent top-level agent holding its own grant rather than a recursive sub-agent — which is also why upstream-subset rules do not apply to it. What the specification defers to a companion document is mission state administration beyond completion: revocation state transitions, delegation-tree queries, and administrative interfaces. Delegation-chain lifecycle is not deferred; sub-agent revocation propagates through the parent's grant.
+-->
+
+#### Cross-Organizational / Locally Verifiable
+
+<!--Supporting authenticated interactions across organizational boundaries is one of AAuth's principal architectural objectives.
+
+Person Servers, Agent Providers, agents, and protected resources may participate across independent trust domains while preserving authenticated relationships between participants. Authentication evidence can therefore span organizations without requiring centralized identity management.
+
+Trust remains anchored in authenticated protocol interactions and configured trust relationships rather than portable authorization credentials.
+
+From a capability-based perspective, the need for Access Server federation may indicate that authority remains server-mediated rather than fully represented by the delegation credential itself. If the delegation credential carried sufficient authority for cross-domain verification, no ongoing relationship between authorization servers would be required.
+-->
+
+#### Attenuated
+
+<!--Attenuation in AAuth differs by delegation mode. Sub-agent authorization supports it directly: every sub-agent request passes through the parent, which can refuse, attenuate, or rate-limit. Call chaining, by design, does not support delegation.  Downstream authorization is intentionally not required to be a subset of upstream scope, and downstream scope is constrained by the downstream resource's own policy together with Person Server evaluation against mission context.
+
+Unlike UCAN or zCaps, attenuation is not represented as a cryptographically enforced property of a portable delegation artifact. Instead, attenuation depends upon server-managed mission state and policy evaluation.
+
+The protocol therefore leaves attenuation semantics outside its definition, supplying contextual evaluation in place of algebraic constraint.
+
+This is deliberate design rather than omission. AAuth does not adopt the RFC 8693 token-exchange model for attenuation (it borrows only that RFC's act claim structure for representing delegation chains), and Appendix B.3.7 states the rationale directly: downstream scope is intentionally not required to be a subset of upstream scope, because "the PS evaluates each hop against the mission context, providing governance-based constraints... more flexible than algebraic attenuation rules." The one place attenuation exists within an agent's own purview is sub-agent authorization, where the parent "can refuse, attenuate, or rate-limit" the sub-agent's authority.
+-->
+
+#### Self-Revocable
+
+<!-- AAuth includes mechanisms for token revocation and lifecycle management.
+
+\-10 specifies named revocation scenarios: a Person Server revoking an auth token it issued or provided, an Access Server revoking one it issued, an agent provider revoking an agent token, and a Person Server revoking a mission, after which subsequent token requests referencing that mission are denied. Revocation also propagates structurally. Revoking a parent's grant causes the next sub-agent authorization to fail, and tokens already issued expire within the hour.
+
+The specification is candid about the limits. Verifying an auth token does not consult its issuer, so nothing in the verification path reports that a token has been revoked; a party that no revocation request reaches is bounded only by token lifetime. What remains unspecified is mission state administration beyond completion, deferred to a companion specification. Revocation is therefore exercised by the servers holding authority rather than by a holder acting on a credential in hand.
+-->
+
+### Summary
+
+<!--
+AAuth represents a distinct approach to delegated authorization for AI systems. Rather than expressing delegated authority as portable cryptographic capabilities, it anchors authority within the Person Server and maintains delegation continuity through authenticated protocol exchanges, mission state, and recorded delegation history. In the taxonomy of capability models, AAuth authorizations are neither bearer capabilities nor certificate capabilities: they are server-mediated proof-of-possession credentials, and the specification assigns multi-hop safety to mission-context evaluation rather than to algebraic attenuation, expecting complementary layers to supply the latter where required. Delegation in AAuth references stable agent identifiers rather than individual keys. The cnf claim binds each authorization token to the agent's current signing key while the identifier persists across key rotation. This reduces coupling between delegation history and key lifetime, but introduces lifecycle questions concerning delegation validity across key rotations—whether a delegation was issued before or after a rotation, and how invocations arriving after should be treated. Capability systems using delegation-specific or one-time keys largely avoid this issue, since delegated credentials typically expire before key rotation becomes relevant.
+
+Its strengths lie in authenticated interoperability, cross-organizational execution, event-driven interaction, and maintaining coherent delegation history throughout mission execution. Unlike capability-based systems, authority remains associated with server-managed mission state rather than being embodied entirely within portable delegation artifacts.
+
+This architectural choice intentionally separates authenticated execution from higher-level governance concerns. Authentication and delegation establish who is requesting execution and under what delegated authority. The Permission Endpoint now provides a normative execution-time decision surface: an agent may ask whether a specific action is permitted and receive granted or denied, recordable in the mission log. What remains outside the protocol's scope is the policy logic that produces that answer, together with attenuation policy, authority evolution, mission governance, and dynamic authority state.
+
+Accordingly, AAuth is best understood as a server-mediated delegation and execution framework. It provides authenticated execution, delegation continuity, and mission coordination while allowing complementary policy and governance architectures to determine whether delegated authority remains valid as mission context, organizational policy, and authority state evolve.
+-->
+
 ## Certificate Capabilities Evaluation (zCaps and UCANs)
 
 ### Overview

@@ -1124,7 +1124,7 @@ The draft is deliberately claim-agnostic. It defines the chaining and key-bindin
 
 This makes dSD-JWT a chainable proof method plus a possession mechanism, in the terminology of the Introduction, rather than a full authorization data model. It is closest in spirit to the certificate capability family, but its root of authority is a credential issuer rather than a resource owner, and it lacks the two properties that define that family in this report: an enforced attenuation rule and a resource and action model. For those reasons it is placed here rather than in a chapter of its own.
 
-Reference points: the draft text (sections 4 through 8) and the SDK's design note, source, and tests. The SDK delegates chain verification to a separate crate that was not reviewed directly, so verdicts below rest on the draft, the SDK call sites, and the SDK's test suite.
+Reference points: the draft text (sections 4 through 8) and the SDK's design note, source, and tests. The SDK delegates chain verification to a separate crate that was not reviewed directly, so verdicts below rest on the current internet-draft (-00), the SDK call sites, and the SDK's test suite.
 
 #### Scorecard
 

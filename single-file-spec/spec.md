@@ -1164,14 +1164,6 @@ It centralizes into one permissioning engine a complex and configurable layering
 
 It is particularly noteworthy as an alternative to conventional ACLs for use in agentic systems because of [OpenAI publicly using and championing it](https://authzed.com/customers/openai), and for AuthZed's [RAG use case](https://authzed.com/use-cases/ai-retrieval-augmented-generation), whereby data governance inherited from training sets can dynamically be applied in training pipelines and (ideally) even preserved in their outputs.
 
-It is included here not because it _is_ an authority-chaining system, but because it could easily be mistaken for one (or sold as one) using a definition of delegation other than that used in this paper.
-Since all authorization decisions are made relative to a relationship graph, adding relationships or adding members to collections could be called a "delegation" of authority (from the collection to the new member, or from one end of the new relationship to the other).
-That said, while capability-certificate systems make very **explicit** (and atomic) the delegation of authority, "delegation" by updating a relationship graph is exactly the opposite: implicit and easily incurring side-effects for OTHER authorities or permission-sets.
-As one of the guiding design goals of this report has been minimizing "ambient authority" (and thus confused-deputy potential), it is worth noting that centralizing all authorization decisions to a _single_ relationship graph governed independently of all the permissions and resources scoped more narrowly than that graph seems like the penultimate "ambient authority" situation!
-
-While the _identities_ against which authorization decisions are made (and against which actors are authenticated) are strictly pegged to the SpiceDB layer, the delegations and permissions themselves (encoded in the AuthZed layer) _do_ allow rich and expressive caveats.
-The fairly expressive [caveat domain-specific language](https://authzed.com/docs/spicedb/concepts/caveats#defining-caveats) provided in AuthZed for attenuating permissions (_or for attentuating [the relationships themselves](https://authzed.com/docs/spicedb/concepts/caveats#allowing-caveats-on-relations)!_) puts the attenuation logic closer to the delegation than many of the other protocols we've evaluated here, and allows these attenuations to travel across the systems unified by the overarching ReBAC abstraction.
-
 #### References
 
 * Gates, Carrie, [Access Control Requirements for Web 2.0 Security and Privacy](https://www.researchgate.net/profile/Carrie-Gates-2/publication/240787391_Access_Control_Requirements_for_Web_20_Security_and_Privacy/links/540e6f670cf2d8daaacd4adf/Access-Control-Requirements-for-Web-20-Security-and-Privacy.pdf), 2006.
@@ -1196,12 +1188,12 @@ The fairly expressive [caveat domain-specific language](https://authzed.com/docs
 
 #### Placement relative to the survey
 
-TBD
-<!--
-Against the merged scorecard, dSD-JWT scores well on exactly the rows where the certificate capability family scores well (chainability, proof of possession, offline delegation) and poorly on the rows that make that family a capability system (attenuation, resource and action model, policy vocabulary, revocation below the root). Two features are novel relative to the surveyed specs and bear on the Gaps list in the Synthesis chapter:
+AuthZed/Zanzibar-based approached are mentioned here not because they _are_ an authority-chaining system, but because it could easily be mistaken for one (or sold as one) using a definition of delegation other than that used in this paper.
+Since all authorization decisions are made relative to a relationship graph, adding relationships or adding members to collections could be called a "delegation" of authority (from the collection to the new member, or from one end of the new relationship to the other).
+That said, while capability-certificate systems make very **explicit** (and atomic) the delegation of authority, "delegation" by updating a relationship graph is exactly the opposite: implicit and easily incurring side-effects for OTHER authorities or permission-sets, far from atomic except where heavily caveated.
+As one of the guiding design goals of this report has been minimizing "ambient authority" (and thus confused-deputy potential), it is worth noting that centralizing all authorization decisions to a _single_ relationship graph governed independently of all the permissions and resources scoped more narrowly than that graph might well be the penultimate "ambient authority" situation!
 
-* Selective disclosure in the chain (Gap 4). A delegatee can hold several pre-signed alternatives and disclose only the one it uses. This is the closest any surveyed artifact comes to hiding chain interiors from a verifier, although it hides alternative payloads rather than intermediate parties.  
-* An explicit statement of the holder-side revocation problem (Gap 5). The draft's security considerations state directly that a holder, unlike an issuer, has no channel to distribute revocation, and fall back to short expiry. This is the offline-revocation gap named from the delegator's side.
+While the _identities_ against which authorization decisions are made (and against which actors are authenticated) are strictly pegged to the SpiceDB layer, the delegations and permissions themselves (encoded in the AuthZed layer) _do_ allow rich and expressive caveats.
+The fairly expressive [domain-specific language for caveats](https://authzed.com/docs/spicedb/concepts/caveats#defining-caveats) provided in AuthZed for attenuating permissions (_or for attentuating [the relationships themselves](https://authzed.com/docs/spicedb/concepts/caveats#allowing-caveats-on-relations)!_) puts the attenuation logic closer to the delegation than many of the other protocols we've evaluated here, and allows these attenuations to travel across the systems unified by the overarching ReBAC abstraction.
 
-If a profile for agentic delegation were layered on dSD-JWT, it would need to supply a resource and action vocabulary, an attenuation rule checked by the verifier at each hop, and a per-hop revocation mechanism. Those are the same items the Gaps list assigns to the certificate capability family, which suggests dSD-JWT is better understood as an alternative envelope for that family's semantics than as a competing model. Its main attractions over the DID-native envelopes are its fit with existing SD-JWT VC wallets and its inherited selective disclosure.
---->
+The scorecard was not added as a column to the major comparison chart earlier because there are already so many other columns representing extensions to the ACL+OAuth model, but this section was added for the sake of completeness.

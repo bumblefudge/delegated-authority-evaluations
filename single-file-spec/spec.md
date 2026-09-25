@@ -1175,7 +1175,7 @@ It is particularly noteworthy as an alternative to conventional ACLs for use in 
 | \# | Requirement | dSD-JWT | Notes |
 | ----- | ----- | ----- | ----- |
 | 1 | Accountable (agent vs. principal/operator) | Partial | Agent<>principal relationships CAN be encoded in SpiceDB, but this is more of a userspace/configuration option than an explicit, first-order distinction |
-| 2 | Resistant to confused deputy | No | Arguably, a richer vocabulary for authentication-based decisions just incentivizes impersonation or credential-sharing further, and makes them harder to detect from the logs and behaviors observed. |
+| 2 | Resistant to confused deputy | No | Arguably, a richer vocabulary for authentication-based decisions and a centralized ACL just incentivizes impersonation or credential-sharing further, and makes them harder to detect from the (cross-service) logs and behaviors observed. |
 | 3 | Represent authorization policies | Yes | Caveats can be imposed on permissions, or on the underlying relationships themselves, in an AuthZed-specific DSL. No advisory tier for these. |
 | 4 | Chainable | Partial | No direct or explicit chaining of permissions, although permissions can be delegated to groups whose members change (and new members can add new members in turn) so something like chainable permissions can be effected implicitly. |
 | 5 | Cross-organizational / locally verifiable | No | Delegation and invocation both require live access to the authoritative SpiceDB server. |
